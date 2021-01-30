@@ -1,0 +1,37 @@
+<html>
+<head>
+   <script>
+      var eventSource = new EventSource('./watch')
+
+      eventSource.addEventListener('message', function(e) {
+         var logDiv = document.getElementById('logs');
+         var logMessage = document.createTextNode(e.data);
+         logDiv.appendChild(logMessage)
+         logDiv.appendChild(document.createElement("br"))
+      }, false)
+
+
+      eventSource.addEventListener('open', function(e){
+         document.getElementById('status').innerHTML = "Connected"
+      }, false)
+
+
+      eventSource.addEventListener('error', function(e){
+         if (e.eventPhase == EventSource.CLOSED){
+            eventSource.close()
+         }
+         if (e.target.readyState == EventSource.CLOSED) {
+            document.getElementById('status').innerHTML = "Disconnected"
+         }
+      }, false)
+
+
+  </script>
+</head>
+<body>
+
+  <h1>Status: <span id="status"></span></h1>
+  <h1>Log Messages</h1>
+  <div id="logs"></div>
+</body>
+</html>
